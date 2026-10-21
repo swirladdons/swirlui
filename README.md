@@ -1,32 +1,21 @@
-# swirlui core
+# SwirlUI Core
+Interface tweaks and skins that go with [Swirl UI](https://uipacks.wago.io/pack/swirl-ui).
 
-a comprehensive ui customization tool for world of warcraft, designed to enhance [swirl ui](https://uipacks.wago.io/pack/swirl-ui) with advanced interface tweaks.
+## Features
+- **UI scale:** slider with quick presets
+- **Text:** font sizes for chat bubbles and zone, subzone and PvP text, moveable error and action status text, and group finder result fonts
+- **Chat:** role icons in group chat, and an option to remove font shadows
+- **Tooltip:** guild line shown as `Guild [Rank]`
+- **Auras:** skinned buffs and debuffs with adjustable size and font
+- **Action bars:** skinned extra action and zone ability buttons, click-through for the extra action button and group finder
+- **Keybinds:** `/sui bind` to bind several keys to an action button by hovering it
+- **Monks:** a Zen Pilgrimage cooldown icon you can size and place
+- **Invites:** auto-invite on a whisper keyword (optionally guild only, converting to a raid when full) and auto-accept invites
+- **BugSack:** a minimap button for BugSack
+- **EllesmereUI:** power text above the target and boss cast bars, and clearer tooltip target wording
+- **Addon skins:** RareScanner, WaypointUI, OPie and Plumber
 
-## features
-
-### ui enhancements
-- **ui scale slider** with quick presets
-- **chat bubble font resizing** with customizable settings
-- **zone/subzone/pvp text** font size controls
-- **action status frame reskinning** with positioning controls
-- **error frame customization** with moveable positioning
-- **buffs & debuffs (aura) skinning** with adjustable icon size and font
-- **extra action & zone ability button skinning**
-- **mouse click passthrough** for extra action button and LFG list frame
-- **addon skinning engine** for RareScanner, WaypointUI, and OPie
-- **bugsack minimap integration** with button management
-- **mail icon** with sender info on minimap
-
-## usage
-
-### quick setup
-```
-/swirlui, /sui, or /swirl - opens main interface
-```
-
-## installation
-
-1. download swirlui from the latest release
-2. extract to your `interface/addons/` folder
-3. type `/reload`
-4. use `/swirlui` or `/sui` to open the configuration panel
+## Commands
+- `/sui`, `/swirlui` or `/swirl` opens the settings
+- `/sui bind` toggles keybind mode
+- `/sui bars` keeps EllesmereUI's mouseover action bars visible until you run it again or reload

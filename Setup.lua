@@ -1,4 +1,4 @@
----@class SUI
+---@class SUI : SF
 local SUI = select(2, ...)
 
 local PLAYER_CLASS = select(2, UnitClass("player"))

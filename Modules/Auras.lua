@@ -1,4 +1,4 @@
----@class SUI
+---@class SUI : SF
 local SUI = select(2, ...)
 
 SUI.Auras = SUI.Auras or {}

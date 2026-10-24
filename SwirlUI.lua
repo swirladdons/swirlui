@@ -1,4 +1,4 @@
----@class SUI
+---@class SUI : SF
 local SUI = select(2, ...)
 local ADDON = LibStub("AceAddon-3.0"):NewAddon("SwirlUI")
 

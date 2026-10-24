@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 local SPELL_ID = 126892
 local GCD_MAX = 1.5

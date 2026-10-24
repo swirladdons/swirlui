@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 SUI.Skins = SUI.Skins or {}
 local S = SUI.Skins

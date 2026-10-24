@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 local S = SUI.Skins
 
 local function T() return SUI.Theme end

@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 SUI.Auras = SUI.Auras or {}
 local A = SUI.Auras

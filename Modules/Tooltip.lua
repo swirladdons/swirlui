@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 local function Settings()
     return SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.tooltip

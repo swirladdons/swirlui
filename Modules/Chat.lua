@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 local GROUP_CHAT = { PARTY = true, RAID = true, INSTANCE_CHAT = true }
 local LSM = LibStub("LibSharedMedia-3.0")

@@ -1,4 +1,6 @@
-local addonName, SUI = ...
+local addonName = ...
+---@class SUI
+local SUI = select(2, ...)
 local C = SUI.Components
 
 SUI.Setup(addonName)

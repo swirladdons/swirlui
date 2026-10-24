@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 SUI.AutoInvite = SUI.AutoInvite or {}
 local AI = SUI.AutoInvite

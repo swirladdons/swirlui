@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 local ADDON = LibStub("AceAddon-3.0"):NewAddon("SwirlUI")
 
 function ADDON:OnEnable()

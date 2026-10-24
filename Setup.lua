@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 local PLAYER_CLASS = select(2, UnitClass("player"))
 local PLAYER_CLASS_COLOR = RAID_CLASS_COLORS[PLAYER_CLASS]

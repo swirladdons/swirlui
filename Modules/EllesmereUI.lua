@@ -1,4 +1,5 @@
-local _, SUI = ...
+---@class SUI
+local SUI = select(2, ...)
 
 local MODULE = "EllesmereUIUnitFrames"
 local UNITS = { "target", "focus", "boss1", "boss2", "boss3", "boss4", "boss5", "boss6", "boss7", "boss8" }

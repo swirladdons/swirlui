@@ -313,50 +313,11 @@ local function ApplyUISettings()
     SUI.Skins:Run()
 end
 
-local function CheckProfileVersionUpdates()
-    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.silence then return end
-    for _, profile in ipairs(SUI.ImportProfiles) do
-        if (profile.string or profile.data) and IsAddOnLoaded(profile.name) then
-            local currentVersion = profile.version
-            local storedVersion = SwirlUIDB.profileVersions[profile.name]
-            
-            if storedVersion and storedVersion ~= currentVersion then
-                local addonColor = WrapTextInColorCode(profile.name, profile.color)
-                local versionColor = WrapTextInColorCode(currentVersion, SUI.Friendly)
-                SUI.Utils:Print(string.format("Update available for %s to v%s", addonColor, versionColor))
-            end
-        end
-    end
-end
-
-local function CheckProfilesReady()
-    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.silence then return end
-    local readyProfiles = {}
-
-    for _, profile in ipairs(SUI.Utils:GetAllProfiles()) do
-        local status = SUI.Utils:GetAddonStatus(profile)
-        if status == SUI.STATUS.READY then
-            table.insert(readyProfiles, profile)
-        end
-    end
-
-    if #readyProfiles > 0 then
-        local readyCount = #readyProfiles
-        local readyColor = WrapTextInColorCode(string(readyCount), SUI.Theme.warning)
-        SUI.Utils:Print(string.format("Profiles ready: %s", readyColor))
-    end
-end
-
 local function SetupDB()
     if not SwirlUIDB then
         SwirlUIDB = {
-            profileVersions = {},
             uiSettings = {},
         }
-    end
-
-    if not SwirlUIDB.profileVersions then
-        SwirlUIDB.profileVersions = {}
     end
 
     local defaultUiSettings = {
@@ -402,7 +363,4 @@ function SUI:Initialize()
 
     ApplyUISettings()
     MinimapData()
-
-    CheckProfileVersionUpdates()
-    CheckProfilesReady()
 end

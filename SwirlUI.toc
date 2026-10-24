@@ -30,8 +30,6 @@ UI/SwirlFramework.xml
 
 Constants.lua
 Utils.lua
-Strings.lua
-ImportExport.lua
 Setup.lua
 GUI.lua
 Modules/Auras.lua

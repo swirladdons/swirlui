@@ -184,113 +184,17 @@ function SUI.Show()
     _G.SWIRLUI_MAIN_FRAME = win
 end
 
-function SUI.ShowExport()
-    if _G.SWIRLUI_EXPORT_FRAME then
-        _G.SWIRLUI_EXPORT_FRAME:Show()
-        return
-    end
-
-    local theme = T()
-    local btnH = 24
-    local spacing = 5
-    local n = #SUI.ImportProfiles
-    local WIN_W = 320
-    local WIN_H = n * (btnH + spacing) + 60
-
-    local win = CreateFrame("Frame", "SWIRLUI_EXPORT_FRAME", UIParent, "BackdropTemplate")
-    win:SetSize(WIN_W, WIN_H)
-    win:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    win:SetFrameStrata("DIALOG")
-    win:SetToplevel(true)
-    win:SetMovable(true)
-    win:EnableMouse(true)
-    SetBackdrop(win, theme.bg.dark, theme.border.color)
-
-    BuildHeader(win, SUI.NameNoCore .. " Export", function() win:Hide() end)
-
-    local yOff = -(theme.headerHeight + spacing)
-    for _, profile in ipairs(SUI.ImportProfiles) do
-        local lbl = string.format("Export %s", WrapTextInColorCode(profile.name, profile.color))
-        local btn = C:CreateButton(win, lbl, {
-            width = WIN_W - theme.padding.med * 2,
-            height = btnH,
-            callback = function()
-                local fn = string.format("Export%s", profile.short or profile.name)
-                if SUI.Imports[fn] then SUI.Imports[fn](SUI.Imports) end
-            end,
-        })
-        btn:SetPoint("TOPLEFT", win, "TOPLEFT", theme.padding.med, yOff)
-        yOff = yOff - (btnH + spacing)
-    end
-
-    win:Show()
-    _G["SwirlUI_Export_Frame"] = win
-    table.insert(UISpecialFrames, "SwirlUI_Export_Frame")
-    _G.SWIRLUI_EXPORT_FRAME = win
-end
-
 function SUI:ReloadDialog()
     SUI.Components.ShowConfirm("Reload the UI to apply changes?", function()
         C_UI.Reload()
     end)
 end
 
-function SUI.CreateStatusDialog(title, content, editBoxContent)
-    local theme = T()
-    local WIN_W = 400
-    local WIN_H = 25 + (content and 30 or 0) + (editBoxContent and 40 or 0) + 34
-
-    local win = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
-    win:SetSize(WIN_W, WIN_H)
-    win:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    win:SetFrameStrata("DIALOG")
-    win:SetMovable(false)
-    SetBackdrop(win, theme.bg.dark, theme.border.color)
-
-    local header = BuildHeader(win, title or "", function() win:Hide() end)
-    header.titleFS:SetPoint("CENTER", header, "CENTER", 0, 0)
-
-    local yOff = -(theme.headerHeight + theme.padding.med)
-
-    if content then
-        local fs = win:CreateFontString(nil, "OVERLAY")
-        ApplyFont(fs, "normal")
-        fs:SetText(content)
-        local color = theme.text.primary
-        fs:SetTextColor(color.r, color.g, color.b, 1)
-        fs:SetPoint("TOPLEFT", win, "TOPLEFT", theme.padding.med, yOff)
-        yOff = yOff - 30
-    end
-
-    if editBoxContent then
-        local editBox = CreateFrame("EditBox", nil, win, "InputBoxTemplate")
-        editBox:SetSize(WIN_W - theme.padding.med * 2, 22)
-        editBox:SetPoint("TOPLEFT", win, "TOPLEFT", theme.padding.med, yOff)
-        editBox:SetAutoFocus(false)
-        editBox:SetText(editBoxContent)
-        editBox:SetCursorPosition(0)
-        editBox:HighlightText()
-        editBox:SetFocus()
-    end
-
-    local okBtn = C:CreateButton(win, "OK", {
-        width = 80,
-        height = 24,
-        callback = function() win:Hide() end,
-    })
-    okBtn:SetPoint("BOTTOM", win, "BOTTOM", 0, theme.padding.med)
-
-    win:Show()
-    return win
-end
-
 SLASH_SWIRLUI1 = "/swirlui"
 SLASH_SWIRLUI2 = "/sui"
 SLASH_SWIRLUI3 = "/swirl"
 SlashCmdList["SWIRLUI"] = function(msg)
-    if msg == "export" then
-        SUI.ShowExport()
-    elseif msg == "bind" then
+    if msg == "bind" then
         SUI.ToggleBindMode()
     elseif msg == "bars" then
         local shown = SUI.ToggleMouseoverBars()

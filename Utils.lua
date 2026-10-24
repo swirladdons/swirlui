@@ -78,66 +78,12 @@ function SUI.Utils:GetAddonStatus(addon)
     return SUI.STATUS.READY, SUI.Neutral
 end
 
-function SUI.Utils:GetAddonStatusColor(addon)
-    local _, color = self:GetAddonStatus(addon)
-    return color
-end
-
-function SUI.Utils:GetAddonStatusText(addon)
-    local status, statusColor = self:GetAddonStatus(addon)
-    local addonText = WrapTextInColorCode(addon.name, addon.color)
-    local statusText = WrapTextInColorCode(status, statusColor)
-
-    return string.format("%s: %s", addonText, statusText)
-end
-
-function SUI.Utils:ApplyProfile(profile)
-    if not IsAddOnLoaded(profile.name) then
-        self:Print(string.format("%s addon not loaded", WrapTextInColorCode(profile.name, profile.color)))
-        return false
-    end
-
-    if not profile.database or not profile.database["profiles"] or
-       (not profile.database["profiles"][SUI.Profile] and not profile.database["profiles"][SUI.ProfileTenEightyP]) then
-        self:Print(string.format("No profile found for %s", WrapTextInColorCode(profile.name, profile.color)))
-        return false
-    end
-
-    local profileKey = string.format("%s - %s", UnitName("player"), GetRealmName())
-    local activeProfile = profile.database["profileKeys"] and profile.database["profileKeys"][profileKey]
-
-    if activeProfile == SUI.Profile or activeProfile == SUI.ProfileTenEightyP then
-        self:Print(string.format("%s profile is already applied", WrapTextInColorCode(profile.name, profile.color)))
-    else
-        if not profile.database["profileKeys"] then
-            profile.database["profileKeys"] = {}
-        end
-        profile.database["profileKeys"][profileKey] = SUI.Profile
-        self:Print(string.format("Applied %s profile", WrapTextInColorCode(profile.name, profile.color)))
-    end
-
-    self:StoreProfileVersion(profile)
-    return true
-end
-
 function SUI.Utils:GetImportProfile(identifier, searchBy)
     searchBy = searchBy or "name"
 
     for _, profile in ipairs(SUI.ImportProfiles) do
         if profile[searchBy] == identifier then
             return profile
-        end
-    end
-
-    return nil
-end
-
-function SUI.Utils:GetApplyAddon(identifier, searchBy)
-    searchBy = searchBy or "name"
-
-    for _, addon in ipairs(SUI.ApplyAddons) do
-        if addon[searchBy] == identifier then
-            return addon
         end
     end
 

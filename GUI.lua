@@ -1,5 +1,5 @@
+local addonName = ...
 ---@class SUI : SF
----@class SUI
 local SUI = select(2, ...)
 local C = SUI.Components
 

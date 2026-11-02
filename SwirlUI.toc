@@ -36,6 +36,12 @@ Modules/AutoInvite.lua
 Modules/UserInterface.lua
 Modules/EllesmereUI.lua
 Modules/CooldownManager.lua
+Modules/CombatText/Core.lua
+Modules/CombatText/Combat.lua
+Modules/CombatText/Interrupts.lua
+Modules/CombatText/Dispels.lua
+Modules/CombatText/Ready.lua
+Modules/CombatTextTab.lua
 Modules/Bind.lua
 Modules/ActionBars.lua
 Modules/ZenPilgrimage.lua

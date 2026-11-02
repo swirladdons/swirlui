@@ -5,7 +5,6 @@ local VIEWER = "BuffIconCooldownViewer"
 local TEXT_LEVEL_OFFSET = 30
 
 local WEAK = { __mode = "k" }
--- per item frame: { holder, text, style, suppressed }
 local overlays = setmetatable({}, WEAK)
 local hookedAlpha = setmetatable({}, WEAK)
 local hookedStyle = setmetatable({}, WEAK)
@@ -85,7 +84,7 @@ local function GetOverlay(frame)
     return overlay
 end
 
--- EllesmereUI anchors the count to the icon itself, blizzard's own anchors hang off an inner frame
+-- ellesmereui anchors the count to the icon itself, blizzard's own anchors hang off an inner frame
 local function IsStyledByEllesmere()
     return C_AddOns.IsAddOnLoaded("EllesmereUICooldownManager")
 end

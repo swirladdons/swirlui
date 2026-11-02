@@ -447,6 +447,9 @@ local CARD_TABS = {
         BuildGroupFinderCard,
         BuildTooltipCard,
     },
+    ["Combat Text"] = {
+        function(scrollChild, y) return SUI.BuildCombatTextCards(scrollChild, y) end,
+    },
     ["Action Bars & Auras"] = {
         BuildActionBarsCard,
         BuildAurasCard,
@@ -495,4 +498,5 @@ end
 function SUI.BuildCardTab(key, content)
     local tab = cardTabs[key] or CreateCardTab(key, content)
     tab:Show()
+    SUI.CombatText.SetPreview(key == "Combat Text")
 end

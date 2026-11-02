@@ -27,7 +27,10 @@ local function CardTab(key)
     return {
         key = key,
         title = key,
-        onSelect = function(content) SUI.BuildCardTab(key, content) end,
+        onSelect = function(content)
+            SUI.activeTab = key
+            SUI.BuildCardTab(key, content)
+        end,
     }
 end
 
@@ -36,11 +39,14 @@ local tabs = {
         key = "General",
         title = "General",
         onSelect = function(content)
+            SUI.activeTab = "General"
+            SUI.CombatText.SetPreview(false)
             SUI.frames.generalContent = content
             if SUI.BuildGeneralTab then SUI.BuildGeneralTab() end
         end,
     },
     CardTab("User Interface"),
+    CardTab("Combat Text"),
     CardTab("Action Bars & Auras"),
     CardTab("Addons"),
 }

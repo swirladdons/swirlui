@@ -311,6 +311,7 @@ local function ApplyUISettings()
     SUI.ApplyAutoInviteSettings()
     SUI.ApplyEllesmereSettings()
     SUI.ApplyCooldownManagerSettings()
+    SUI.ApplyObjectiveTrackerSkin()
     SUI.Skins:Run()
 end
 
@@ -334,6 +335,7 @@ local function SetupDB()
         skinExtraButtons = { enabled = true },
         lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true, plumber = true },
+        objectiveTracker = { enabled = true },
         ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true },
         tooltip = { guildRank = true, reactionColors = true },
         cdmStacks = { enabled = true, spells = { 202090 } },

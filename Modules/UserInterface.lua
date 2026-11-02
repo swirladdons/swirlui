@@ -189,6 +189,24 @@ local function BuildActionBarsCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildObjectiveTrackerCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Objective Tracker")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.objectiveTracker
+
+    local toggle = C:CreateToggle(card, "Skin Quest Progress Bars & Find Group Buttons", db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyObjectiveTrackerSkin()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildGroupFinderCard(scrollChild, y)
     local theme = T()
     local card = C:CreateCard(scrollChild, "Group Finder")
@@ -453,6 +471,7 @@ local CARD_TABS = {
         OffsetCard("Action Status", "actionStatus"),
         BuildMouseClickCard,
         BuildGroupFinderCard,
+        BuildObjectiveTrackerCard,
         BuildTooltipCard,
     },
     ["Combat Text"] = {

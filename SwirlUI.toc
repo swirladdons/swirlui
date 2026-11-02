@@ -52,5 +52,6 @@ Modules/Skins/RareScanner.lua
 Modules/Skins/WaypointUI.lua
 Modules/Skins/OPie.lua
 Modules/Skins/Plumber.lua
+Modules/ObjectiveTracker.lua
 
 SwirlUI.lua

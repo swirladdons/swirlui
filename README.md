@@ -15,6 +15,7 @@ Interface tweaks and skins that go with [Swirl UI](https://uipacks.wago.io/pack/
 - **Invites:** auto-invite on a whisper keyword (optionally guild only, converting to a raid when full) and auto-accept invites
 - **BugSack:** a minimap button for BugSack
 - **EllesmereUI:** power text above the target and boss cast bars, and clearer tooltip target wording
+- **Objective tracker:** flat skin for quest progress bars and find group buttons
 - **Addon skins:** RareScanner, WaypointUI, OPie and Plumber
 
 ## Commands

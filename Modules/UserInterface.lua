@@ -260,7 +260,8 @@ end
 local function BuildEllesmereCard(scrollChild, y)
     local unitFrames = C_AddOns.IsAddOnLoaded("EllesmereUIUnitFrames")
     local blizzardSkin = C_AddOns.IsAddOnLoaded("EllesmereUIBlizzardSkin")
-    if not unitFrames and not blizzardSkin then return y end
+    local damageMeters = C_AddOns.IsAddOnLoaded("EllesmereUIDamageMeters")
+    if not unitFrames and not blizzardSkin and not damageMeters then return y end
 
     local theme = T()
     local card = C:CreateCard(scrollChild, "EllesmereUI")
@@ -284,6 +285,17 @@ local function BuildEllesmereCard(scrollChild, y)
             db.tooltipTargetLine,
             function(v)
                 db.tooltipTargetLine = v
+                SUI.SettingsChanged = true
+            end)
+        card:AddWidget(toggle)
+    end
+
+    if damageMeters then
+        local toggle = C:CreateToggle(card, "Custom Spec Icons in Damage Meters",
+            db.damageMeterSpecIcons,
+            function(v)
+                db.damageMeterSpecIcons = v
+                SUI.ApplyEllesmereSettings()
                 SUI.SettingsChanged = true
             end)
         card:AddWidget(toggle)

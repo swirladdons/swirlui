@@ -336,7 +336,7 @@ local function SetupDB()
         lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true, plumber = true },
         objectiveTracker = { enabled = true },
-        ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true },
+        ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true, damageMeterSpecIcons = true },
         tooltip = { guildRank = true, reactionColors = true },
         cdmStacks = { enabled = true, spells = { 202090 } },
         zenPilgrimage = { enabled = true, size = 48, offsetX = 0, offsetY = 150 },

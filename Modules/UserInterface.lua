@@ -360,6 +360,14 @@ local function BuildTooltipCard(scrollChild, y)
         end)
     card:AddWidget(toggle)
 
+    local reactionToggle = C:CreateToggle(card, "Reaction and Difficulty Colors on NPCs",
+        db.reactionColors,
+        function(v)
+            db.reactionColors = v
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(reactionToggle)
+
     return y + card:GetHeight() + theme.padding.small
 end
 

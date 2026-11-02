@@ -335,7 +335,7 @@ local function SetupDB()
         lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true, plumber = true },
         ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true },
-        tooltip = { guildRank = true },
+        tooltip = { guildRank = true, reactionColors = true },
         cdmStacks = { enabled = true, spells = { 202090 } },
         zenPilgrimage = { enabled = true, size = 48, offsetX = 0, offsetY = 150 },
         autoInvite = { enabled = true, keywords = "inv", guildOnly = true, convertToRaid = true, acceptGuildInvites = false, acceptBNetInvites = false },

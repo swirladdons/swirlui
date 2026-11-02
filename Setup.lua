@@ -310,6 +310,7 @@ local function ApplyUISettings()
     SUI.ApplyLFGFontSkin()
     SUI.ApplyAutoInviteSettings()
     SUI.ApplyEllesmereSettings()
+    SUI.ApplyCooldownManagerSettings()
     SUI.Skins:Run()
 end
 
@@ -335,6 +336,7 @@ local function SetupDB()
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true, plumber = true },
         ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true },
         tooltip = { guildRank = true },
+        cdmStacks = { enabled = true, spells = { 202090 } },
         zenPilgrimage = { enabled = true, size = 48, offsetX = 0, offsetY = 150 },
         autoInvite = { enabled = true, keywords = "inv", guildOnly = true, convertToRaid = true, acceptGuildInvites = false, acceptBNetInvites = false },
     }
@@ -355,6 +357,15 @@ local function SetupDB()
         elseif type(defaultValue) ~= type(SwirlUIDB.uiSettings[key]) then
             SwirlUIDB.uiSettings[key] = defaultValue
         end
+    end
+
+    local cdmStacks = SwirlUIDB.uiSettings.cdmStacks
+    if cdmStacks.spellIDs then
+        for id in tostring(cdmStacks.spellIDs):gmatch("%d+") do
+            id = tonumber(id)
+            if not tContains(cdmStacks.spells, id) then tinsert(cdmStacks.spells, id) end
+        end
+        cdmStacks.spellIDs = nil
     end
 end
 

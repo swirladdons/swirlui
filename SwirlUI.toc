@@ -35,6 +35,7 @@ Modules/General.lua
 Modules/AutoInvite.lua
 Modules/UserInterface.lua
 Modules/EllesmereUI.lua
+Modules/CooldownManager.lua
 Modules/Bind.lua
 Modules/ActionBars.lua
 Modules/ZenPilgrimage.lua

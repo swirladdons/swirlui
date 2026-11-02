@@ -276,6 +276,77 @@ local function BuildEllesmereCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local RebuildUserInterfaceTab
+
+local function CreateSpellRow(card, spellID, onRemove)
+    local theme = T()
+    local row = CreateFrame("Frame", nil, card)
+    row:SetHeight(24)
+
+    local icon = row:CreateTexture(nil, "ARTWORK")
+    icon:SetSize(20, 20)
+    icon:SetPoint("LEFT", row, "LEFT", 0, 0)
+    icon:SetTexture(C_Spell.GetSpellTexture(spellID))
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+
+    local label = row:CreateFontString(nil, "OVERLAY")
+    C.ApplyFont(label, "normal")
+    label:SetPoint("LEFT", icon, "RIGHT", theme.padding.small, 0)
+    label:SetTextColor(theme.text.primary.r, theme.text.primary.g, theme.text.primary.b, 1)
+    label:SetText(string.format("%s (%d)", C_Spell.GetSpellName(spellID) or "Unknown", spellID))
+
+    local remove = C:CreateCloseButton(row, onRemove, { size = 22 })
+    remove:SetPoint("RIGHT", row, "RIGHT", 0, 0)
+
+    return row
+end
+
+local function BuildCooldownManagerCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Cooldown Manager Stacks")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.cdmStacks
+
+    local function Changed()
+        SUI.ApplyCooldownManagerSettings()
+        SUI.SettingsChanged = true
+        RebuildUserInterfaceTab()
+    end
+
+    card:AddHeaderToggle(db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyCooldownManagerSettings()
+            SUI.SettingsChanged = true
+        end)
+
+    card:AddLabel("Always show the stack count, including 1, on these tracked buffs.")
+
+    local entry
+    entry = C:CreateEntryBox(card, "", function(text)
+        local id = tonumber(text)
+        if not id or not C_Spell.GetSpellName(id) or tContains(db.spells, id) then
+            entry:SetValue("")
+            return
+        end
+        tinsert(db.spells, id)
+        Changed()
+    end)
+    entry:SetHeight(24)
+    card:AddWidget(entry)
+    card:AddLabel("Type a spell ID and press Enter.", theme.text.muted, "small")
+
+    for index, spellID in ipairs(db.spells) do
+        card:AddWidget(CreateSpellRow(card, spellID, function()
+            tremove(db.spells, index)
+            Changed()
+        end))
+    end
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildTooltipCard(scrollChild, y)
     local theme = T()
     local card = C:CreateCard(scrollChild, "Tooltip")
@@ -371,6 +442,7 @@ local function CreateUserInterfaceTab()
     SUI.frames.userInterfaceTab = userInterfaceTab
 
     local scrollChild = C:CreateTabScroller(userInterfaceTab)
+    userInterfaceTab.scrollChild = scrollChild
 
     local y = theme.padding.small
     y = BuildUIScaleCard(scrollChild, y)
@@ -384,11 +456,26 @@ local function CreateUserInterfaceTab()
     y = BuildGroupFinderCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
     y = BuildEllesmereCard(scrollChild, y)
+    y = BuildCooldownManagerCard(scrollChild, y)
     y = BuildTooltipCard(scrollChild, y)
     y = BuildZenPilgrimageCard(scrollChild, y)
     y = BuildAddonSkinsCard(scrollChild, y)
 
     scrollChild:Commit(y)
+end
+
+RebuildUserInterfaceTab = function()
+    local scroll = userInterfaceTab.scrollChild.scrollFrame:GetVerticalScroll()
+    userInterfaceTab:Hide()
+    userInterfaceTab:SetParent(nil)
+    CreateUserInterfaceTab()
+    userInterfaceTab:Show()
+    -- the scroll child is sized a frame or two after the build
+    C_Timer.After(0, function()
+        C_Timer.After(0, function()
+            userInterfaceTab.scrollChild.scrollFrame:SetVerticalScroll(scroll)
+        end)
+    end)
 end
 
 function SUI.BuildUserInterfaceTab()

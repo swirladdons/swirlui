@@ -9,6 +9,7 @@ Interface tweaks and skins that go with [Swirl UI](https://uipacks.wago.io/pack/
 - **Auras:** skinned buffs and debuffs with adjustable size and font
 - **Action bars:** skinned extra action and zone ability buttons, click-through for the extra action button and group finder
 - **Keybinds:** `/sui bind` to bind several keys to an action button by hovering it
+- **Cooldown Manager:** always show the stack count, including 1, on tracked buff icons
 - **Monks:** a Zen Pilgrimage cooldown icon you can size and place
 - **Invites:** auto-invite on a whisper keyword (optionally guild only, converting to a raid when full) and auto-accept invites
 - **BugSack:** a minimap button for BugSack

@@ -89,6 +89,9 @@ local function CreateGeneralTab()
 
     y = y + inviteCard:GetHeight() + theme.padding.small
 
+    y = SUI.BuildZenPilgrimageCard(scrollChild, y)
+
+    scrollChild:Commit(y)
 end
 
 function SUI.BuildGeneralTab()

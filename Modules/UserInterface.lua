@@ -4,8 +4,6 @@ local C = SUI.Components
 
 local function T() return SUI.Theme end
 
-local userInterfaceTab
-
 local function BuildUIScaleCard(scrollChild, y)
     local theme = T()
     local card  = C:CreateCard(scrollChild, "UI Scale")
@@ -276,7 +274,7 @@ local function BuildEllesmereCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
-local RebuildUserInterfaceTab
+local RebuildCardTab
 
 local function CreateSpellRow(card, spellID, onRemove)
     local theme = T()
@@ -311,7 +309,7 @@ local function BuildCooldownManagerCard(scrollChild, y)
     local function Changed()
         SUI.ApplyCooldownManagerSettings()
         SUI.SettingsChanged = true
-        RebuildUserInterfaceTab()
+        RebuildCardTab("Addons")
     end
 
     card:AddHeaderToggle(db.enabled,
@@ -365,7 +363,7 @@ local function BuildTooltipCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
-local function BuildZenPilgrimageCard(scrollChild, y)
+function SUI.BuildZenPilgrimageCard(scrollChild, y)
     if select(2, UnitClass("player")) ~= "MONK" then return y end
 
     local theme = T()
@@ -433,54 +431,68 @@ local function BuildAddonSkinsCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
-local function CreateUserInterfaceTab()
-    local theme  = T()
-    local parent = SUI.frames.userInterfaceContent
-
-    userInterfaceTab = CreateFrame("Frame", "SwirlUI_UserInterfaceTab", parent)
-    userInterfaceTab:SetAllPoints(parent)
-    SUI.frames.userInterfaceTab = userInterfaceTab
-
-    local scrollChild = C:CreateTabScroller(userInterfaceTab)
-    userInterfaceTab.scrollChild = scrollChild
-
-    local y = theme.padding.small
-    y = BuildUIScaleCard(scrollChild, y)
-    y = BuildChatBubblesCard(scrollChild, y)
-    y = BuildChatCard(scrollChild, y)
-    y = BuildZoneTextCard(scrollChild, y)
-    y = BuildOffsetCard(scrollChild, y, "UI Errors",     "uiErrors")
-    y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
-    y = BuildMouseClickCard(scrollChild, y)
-    y = BuildActionBarsCard(scrollChild, y)
-    y = BuildGroupFinderCard(scrollChild, y)
-    y = BuildAurasCard(scrollChild, y)
-    y = BuildEllesmereCard(scrollChild, y)
-    y = BuildCooldownManagerCard(scrollChild, y)
-    y = BuildTooltipCard(scrollChild, y)
-    y = BuildZenPilgrimageCard(scrollChild, y)
-    y = BuildAddonSkinsCard(scrollChild, y)
-
-    scrollChild:Commit(y)
+local function OffsetCard(title, dbKey)
+    return function(scrollChild, y) return BuildOffsetCard(scrollChild, y, title, dbKey) end
 end
 
-RebuildUserInterfaceTab = function()
-    local scroll = userInterfaceTab.scrollChild.scrollFrame:GetVerticalScroll()
-    userInterfaceTab:Hide()
-    userInterfaceTab:SetParent(nil)
-    CreateUserInterfaceTab()
-    userInterfaceTab:Show()
+local CARD_TABS = {
+    ["User Interface"] = {
+        BuildUIScaleCard,
+        BuildChatBubblesCard,
+        BuildChatCard,
+        BuildZoneTextCard,
+        OffsetCard("UI Errors", "uiErrors"),
+        OffsetCard("Action Status", "actionStatus"),
+        BuildMouseClickCard,
+        BuildGroupFinderCard,
+        BuildTooltipCard,
+    },
+    ["Action Bars & Auras"] = {
+        BuildActionBarsCard,
+        BuildAurasCard,
+    },
+    ["Addons"] = {
+        BuildEllesmereCard,
+        BuildCooldownManagerCard,
+        BuildAddonSkinsCard,
+    },
+}
+
+local cardTabs = {}
+
+local function CreateCardTab(key, parent)
+    local theme = T()
+    local tab = CreateFrame("Frame", nil, parent)
+    tab:SetAllPoints(parent)
+    tab.scrollChild = C:CreateTabScroller(tab)
+    tab.parent = parent
+    cardTabs[key] = tab
+
+    local y = theme.padding.small
+    for _, build in ipairs(CARD_TABS[key]) do
+        y = build(tab.scrollChild, y)
+    end
+    tab.scrollChild:Commit(y)
+    return tab
+end
+
+RebuildCardTab = function(key)
+    local old = cardTabs[key]
+    local scroll = old.scrollChild.scrollFrame:GetVerticalScroll()
+    old:Hide()
+    old:SetParent(nil)
+
+    local tab = CreateCardTab(key, old.parent)
+    tab:Show()
     -- the scroll child is sized a frame or two after the build
     C_Timer.After(0, function()
         C_Timer.After(0, function()
-            userInterfaceTab.scrollChild.scrollFrame:SetVerticalScroll(scroll)
+            tab.scrollChild.scrollFrame:SetVerticalScroll(scroll)
         end)
     end)
 end
 
-function SUI.BuildUserInterfaceTab()
-    if not userInterfaceTab then
-        CreateUserInterfaceTab()
-    end
-    userInterfaceTab:Show()
+function SUI.BuildCardTab(key, content)
+    local tab = cardTabs[key] or CreateCardTab(key, content)
+    tab:Show()
 end

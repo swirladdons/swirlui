@@ -23,6 +23,14 @@ SwirlUI_Components = SUI.Components
 SwirlUI_Theme = SUI.Theme
 SwirlUI = SUI
 
+local function CardTab(key)
+    return {
+        key = key,
+        title = key,
+        onSelect = function(content) SUI.BuildCardTab(key, content) end,
+    }
+end
+
 local tabs = {
     {
         key = "General",
@@ -32,14 +40,9 @@ local tabs = {
             if SUI.BuildGeneralTab then SUI.BuildGeneralTab() end
         end,
     },
-    {
-        key = "User Interface",
-        title = "User Interface",
-        onSelect = function(content)
-            SUI.frames.userInterfaceContent = content
-            if SUI.BuildUserInterfaceTab then SUI.BuildUserInterfaceTab() end
-        end,
-    },
+    CardTab("User Interface"),
+    CardTab("Action Bars & Auras"),
+    CardTab("Addons"),
 }
 
 local function BuildHeader(win, titleText, onClose)
@@ -166,7 +169,6 @@ function SUI.Show()
     SUI.frames.optionsFrame = win
     SUI.frames.tabController = ctrl
     SUI.frames.generalContent = ctrl.GetContent("General")
-    SUI.frames.userInterfaceContent = ctrl.GetContent("User Interface")
 
     win:EnableKeyboard(true)
     win:SetScript("OnKeyDown", function(self, key)

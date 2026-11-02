@@ -8,6 +8,7 @@ local WEAK = { __mode = "k" }
 -- per item frame: { holder, text, style, suppressed }
 local overlays = setmetatable({}, WEAK)
 local hookedAlpha = setmetatable({}, WEAK)
+local hookedStyle = setmetatable({}, WEAK)
 local hookedViewers = setmetatable({}, WEAK)
 
 local tracked = {}
@@ -84,11 +85,16 @@ local function GetOverlay(frame)
     return overlay
 end
 
--- the native count is only trustworthy while it is empty (1 stack), which is when its anchor is last known good
+-- EllesmereUI anchors the count to the icon itself, blizzard's own anchors hang off an inner frame
+local function IsStyledByEllesmere()
+    return C_AddOns.IsAddOnLoaded("EllesmereUICooldownManager")
+end
+
 local function SampleStyle(overlay, nativeText)
     local path, size, flags = nativeText:GetFont()
     local point, relativeTo, relativePoint, x, y = nativeText:GetPoint(1)
     if not (path and size and size > 0 and point) then return end
+    if IsStyledByEllesmere() and relativeTo ~= overlay.holder:GetParent() then return end
 
     local r, g, b = nativeText:GetTextColor()
     -- an inactive item reports its anchor as secret, keep the last good sample
@@ -104,6 +110,24 @@ local function SampleStyle(overlay, nativeText)
     text:ClearAllPoints()
     text:SetPoint(point, relativeTo or overlay.holder:GetParent(), relativePoint or point, x or 0, y or 0)
     overlay.styled = true
+end
+
+-- restyles of the native count (font, anchor) are copied on the next frame, once the whole restyle is done
+local function WatchNativeStyle(overlay, nativeText)
+    if hookedStyle[nativeText] then return end
+    hookedStyle[nativeText] = true
+
+    local pending = false
+    local function Resample()
+        if pending then return end
+        pending = true
+        C_Timer.After(0, function()
+            pending = false
+            if overlay.suppressed then SampleStyle(overlay, nativeText) end
+        end)
+    end
+    hooksecurefunc(nativeText, "SetFont", Resample)
+    hooksecurefunc(nativeText, "SetPoint", Resample)
 end
 
 local function ReadApplications(frame)
@@ -141,6 +165,7 @@ local function ShowCount(frame)
         SampleStyle(overlay, nativeText)
     end
     SetNativeSuppressed(overlay, nativeText, true)
+    WatchNativeStyle(overlay, nativeText)
 
     if not (overlay.styled and IsItemActive(frame)) then
         overlay.holder:Hide()

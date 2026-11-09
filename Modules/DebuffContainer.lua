@@ -130,6 +130,10 @@ end
 
 local function HideBlizzardFrame()
     DebuffFrame:SetAlpha(0)
+    -- invisible is not enough, its buttons would still show a second tooltip
+    for _, button in pairs(DebuffFrame.auraFrames) do
+        if button.EnableMouse then button:EnableMouse(false) end
+    end
 end
 
 -- returns "new" when the container was just built, "existing" when it was already there
@@ -142,6 +146,7 @@ function A.EnsureDebuffContainer()
 
     HideBlizzardFrame()
     hooksecurefunc(EditModeManagerFrame, "ExitEditMode", HideBlizzardFrame)
+    hooksecurefunc(DebuffFrame, "UpdateAuraButtons", HideBlizzardFrame)
     return "new"
 end
 

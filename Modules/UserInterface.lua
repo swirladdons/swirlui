@@ -469,6 +469,83 @@ local function BuildAddonSkinsCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildGreatVaultCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Great Vault Alert")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.greatVault
+
+    card:AddHeaderToggle(db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyGreatVaultAlert()
+        end)
+
+    card:AddLabel("Names your loot specialization as you open the Great Vault.")
+
+    card:AddWidget(C:CreateToggle(card, "Chat Message", db.chatMessage,
+        function(v) db.chatMessage = v end))
+
+    local function Apply()
+        SUI.ApplyGreatVaultAlert()
+        SUI.PreviewGreatVaultAlert()
+    end
+
+    card:AddWidget(C:CreateSlider(card, "Duration", 1, 10, 0.5,
+        function() return db.duration end,
+        function(v) db.duration = v end))
+    card:AddWidget(C:CreateSlider(card, "Font Size", 8, 96, 1,
+        function() return db.fontSize end,
+        function(v)
+            db.fontSize = v
+            Apply()
+        end))
+    card:AddWidget(C:CreateXYPosition(card,
+        function() return db.x end,
+        function(v)
+            db.x = v
+            Apply()
+        end,
+        function() return db.y end,
+        function(v)
+            db.y = v
+            Apply()
+        end))
+    card:AddWidget(C:CreateButton(card, "Preview", {
+        width = 120,
+        height = 24,
+        callback = SUI.PreviewGreatVaultAlert,
+    }))
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
+local function BuildLootSpecBarCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Loot Specialization Bar")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.lootSpecBar
+
+    card:AddHeaderToggle(db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyLootSpecBar()
+            SUI.ApplyGreatVaultAlert()
+        end)
+
+    card:AddLabel("Shows buttons right above the Great Vault alert while you are opening the vault. Move the alert to move the buttons. Picking a spec also stops the cast, so you can reopen the vault with the new loot specialization.")
+
+    card:AddWidget(C:CreateButton(card, "Preview", {
+        width = 120,
+        height = 24,
+        callback = SUI.PreviewLootSpecBar,
+    }))
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function OffsetCard(title, dbKey)
     return function(scrollChild, y) return BuildOffsetCard(scrollChild, y, title, dbKey) end
 end
@@ -485,6 +562,8 @@ local CARD_TABS = {
         BuildGroupFinderCard,
         BuildObjectiveTrackerCard,
         BuildTooltipCard,
+        BuildGreatVaultCard,
+        BuildLootSpecBarCard,
     },
     ["Combat Text"] = {
         function(scrollChild, y) return SUI.BuildCombatTextCards(scrollChild, y) end,

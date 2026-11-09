@@ -13,6 +13,7 @@ Interface tweaks and skins that go with [Swirl UI](https://uipacks.wago.io/pack/
 - **Combat text:** enter and exit combat, low durability, no target, interrupts, dispels, purges, missed kicks, and bloodlust and potion ready messages, all with their own text and color
 - **Monks:** a Zen Pilgrimage cooldown icon you can size and place
 - **Invites:** auto-invite on a whisper keyword (optionally guild only, converting to a raid when full) and auto-accept invites
+- **Great Vault:** an alert naming your loot specialization as you open the vault, and a loot specialization bar above it to switch spec while opening it (picking a spec also stops the cast)
 - **BugSack:** a minimap button for BugSack
 - **EllesmereUI:** power text above the target and boss cast bars, and clearer tooltip target wording
 - **Objective tracker:** flat skin for quest progress bars and find group buttons

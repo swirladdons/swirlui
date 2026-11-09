@@ -309,6 +309,7 @@ local function ApplyUISettings()
     SUI.ApplyExtraButtonSkin()
     SUI.ApplyLFGFontSkin()
     SUI.ApplyAutoInviteSettings()
+    SUI.ApplyGreatVaultAlert()
     SUI.ApplyEllesmereSettings()
     SUI.ApplyCooldownManagerSettings()
     SUI.ApplyObjectiveTrackerSkin()
@@ -340,6 +341,8 @@ local function SetupDB()
         tooltip = { guildRank = true, reactionColors = true },
         cdmStacks = { enabled = true, spells = { 202090 } },
         zenPilgrimage = { enabled = true, size = 48, offsetX = 0, offsetY = 150 },
+        greatVault = { enabled = true, chatMessage = true, duration = 4, fontSize = 48, x = 0, y = 200 },
+        lootSpecBar = { enabled = true },
         autoInvite = { enabled = true, keywords = "inv", guildOnly = true, convertToRaid = true, acceptGuildInvites = false, acceptBNetInvites = false },
     }
 

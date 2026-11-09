@@ -46,6 +46,7 @@ Modules/CombatTextTab.lua
 Modules/Bind.lua
 Modules/ActionBars.lua
 Modules/ZenPilgrimage.lua
+Modules/GreatVault.lua
 Modules/Tooltip.lua
 Modules/Chat.lua
 Modules/Skins/Core.lua

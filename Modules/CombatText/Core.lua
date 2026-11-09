@@ -35,8 +35,6 @@ local function BuildDefaults()
         outline = "OUTLINE",
         x = 0,
         y = 77.94,
-        noTargetX = 0,
-        noTargetY = 90,
     }
     for _, def in ipairs(CT.MESSAGES) do
         defaults[def.key] = {
@@ -112,6 +110,8 @@ local function Arrange()
     for _, frame in ipairs(pool) do
         if frame.active then active[#active + 1] = frame end
     end
+    -- No Target is a frame of its own, but it takes the top row so nothing can overlap it
+    if noTargetFrame and noTargetFrame:IsShown() then active[#active + 1] = noTargetFrame end
     table.sort(active, function(a, b) return a.sequence < b.sequence end)
 
     local y = 0
@@ -282,8 +282,12 @@ end
 
 function CT.EnsureNoTarget()
     if noTargetFrame then return noTargetFrame end
-    noTargetFrame = CreateFrame("Frame", "SwirlUINoTarget", UIParent)
-    noTargetFrame:SetFrameStrata("HIGH")
+    EnsureContainer()
+    noTargetFrame = CreateFrame("Frame", "SwirlUINoTarget", container)
+    noTargetFrame.sequence = 0
+    noTargetFrame:SetWidth(MESSAGE_WIDTH)
+    noTargetFrame:SetScript("OnShow", Arrange)
+    noTargetFrame:SetScript("OnHide", Arrange)
     noTargetFrame.text = noTargetFrame:CreateFontString(nil, "OVERLAY")
     noTargetFrame.text:SetPoint("CENTER")
     noTargetFrame:Hide()
@@ -295,12 +299,11 @@ function CT.StyleNoTarget()
     if not c then return end
     local frame = CT.EnsureNoTarget()
     local msg = c.noTarget
-    frame:ClearAllPoints()
-    frame:SetPoint("CENTER", UIParent, "CENTER", c.noTargetX, c.noTargetY)
-    frame:SetSize(MESSAGE_WIDTH, math.max(c.fontSize + 6, 14))
+    frame:SetHeight(math.max(c.fontSize + 6, 14))
     StyleText(frame.text, c)
     frame.text:SetText(msg.text)
     frame.text:SetTextColor(msg.color[1], msg.color[2], msg.color[3], 1)
+    Arrange()
 end
 
 local applyHooks = {}

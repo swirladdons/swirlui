@@ -113,21 +113,6 @@ local function AddMessage(card, def)
         end)
         card:AddWidget(includeDead)
         dependents[#dependents + 1] = includeDead
-
-        local c = CT.Cfg()
-        local position = C:CreateXYPosition(card,
-            function() return c.noTargetX end,
-            function(v)
-                c.noTargetX = v
-                CT.Apply()
-            end,
-            function() return c.noTargetY end,
-            function(v)
-                c.noTargetY = v
-                CT.Apply()
-            end)
-        card:AddWidget(position)
-        dependents[#dependents + 1] = position
     end
 
     for _, dependent in ipairs(dependents) do dependent:SetEnabled(db.enabled) end

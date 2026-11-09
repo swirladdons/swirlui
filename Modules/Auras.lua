@@ -37,36 +37,8 @@ local function SetBorderColor(border, r, g, b)
     end
 end
 
--- https://wago.tools/db2/SpellDispelType
-local dispelIndexes = {None = 0, Magic = 1, Curse = 2, Disease = 3, Poison = 4, Enrage = 9, Bleed = 11}
-local black = {r = 0, g = 0, b = 0, a = 1}
-local dispelCurve
-
-local function GetDispelCurve()
-    if dispelCurve then return dispelCurve end
-
-    dispelCurve = C_CurveUtil.CreateColorCurve()
-    dispelCurve:SetType(Enum.LuaCurveType.Step)
-
-    for name, index in pairs(dispelIndexes) do
-        local color = DebuffTypeColor[name]
-        dispelCurve:AddPoint(index, color and {r = color.r, g = color.g, b = color.b, a = 1} or black)
-    end
-
-    return dispelCurve
-end
-
-local function SetDispelBorderColor(auraFrame)
-    local info = auraFrame.buttonInfo
-    local color = info and info.auraInstanceID and auraFrame:GetFilter() == "HARMFUL"
-        and C_UnitAuras.GetAuraDispelTypeColor(auraFrame.unit, info.auraInstanceID, GetDispelCurve())
-
-    if color then
-        SetBorderColor(auraFrame.SwirlBorder, color.r, color.g, color.b)
-    else
-        SetBorderColor(auraFrame.SwirlBorder, black.r, black.g, black.b)
-    end
-end
+local black = {r = 0, g = 0, b = 0}
+local tempEnchant = {r = 0.64, g = 0.21, b = 0.93}
 
 local function FormatCompactDuration(timeLeft)
     if timeLeft >= 86400 then
@@ -91,7 +63,6 @@ local function SkinAuras(auraFrame)
     if auraFrame.DebuffBorder then
         auraFrame.DebuffBorder:Hide()
         auraFrame.DebuffBorder:SetAlpha(0)
-        auraFrame.DebuffBorder:SetTexture(nil)
     elseif auraFrame.BuffBorder then
         auraFrame.BuffBorder:SetTexture(nil)
     end
@@ -107,7 +78,18 @@ local function SkinAuras(auraFrame)
         auraFrame.SwirlBorder:SetPoint("BOTTOMRIGHT", auraFrame.Icon, "BOTTOMRIGHT", 1, -1)
     end
 
-    SetDispelBorderColor(auraFrame)
+    local enchantBorder = auraFrame.TempEnchantBorder
+    if enchantBorder then
+        enchantBorder:SetTexture(nil)
+        enchantBorder:SetAlpha(0)
+    end
+
+    local info = auraFrame.buttonInfo
+    if info and info.auraType == "TempEnchant" then
+        SetBorderColor(auraFrame.SwirlBorder, tempEnchant.r, tempEnchant.g, tempEnchant.b)
+    else
+        SetBorderColor(auraFrame.SwirlBorder, black.r, black.g, black.b)
+    end
 
     local fontSize = auraSettings.fontSize or 12
 
@@ -137,9 +119,8 @@ local function SkinAuras(auraFrame)
 end
 
 local function SkinAuraFrames()
-    local frames = {BuffFrame, DebuffFrame}
-    for _, frame in pairs(frames) do
-        if frame and frame.auraFrames then
+    for _, frame in ipairs({BuffFrame, DebuffFrame}) do
+        if frame and frame.auraFrames and not (frame == DebuffFrame and A.HasDebuffContainer()) then
             if frame.CollapseAndExpandButton then
                 frame.CollapseAndExpandButton:SetAlpha(0)
                 frame.CollapseAndExpandButton:SetScript("OnClick", nil)
@@ -159,10 +140,16 @@ local function SetupAuraHooks()
     hooksecurefunc(EditModeManagerFrame, "EnterEditMode", function() SkinAuraFrames() end)
     hooksecurefunc(EditModeManagerFrame, "ExitEditMode", function() SkinAuraFrames() end)
     hooksecurefunc(DebuffFrame, "UpdateAuraButtons", function() SkinAuraFrames() end)
+    -- temp enchants are in the buff frame
+    if BuffFrame.UpdateAuraButtons then
+        hooksecurefunc(BuffFrame, "UpdateAuraButtons", function() SkinAuraFrames() end)
+    end
 end
 
 function A.Apply()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.skinAuras and SwirlUIDB.uiSettings.skinAuras.enabled then
+        -- size and font changes only reach the debuff container after a reload
+        if A.EnsureDebuffContainer() == "existing" then SUI.SettingsChanged = true end
         SkinAuraFrames()
         SetupAuraHooks()
     end
